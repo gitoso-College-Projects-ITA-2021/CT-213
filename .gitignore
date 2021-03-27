@@ -1,6 +1,9 @@
 # Original lab files
 Original/
 
+# Visual Studio Config
+.vscode/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
