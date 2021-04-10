@@ -1,6 +1,9 @@
 # Original lab files
 Original/
 
+# Lab3 Output files
+Lab3/*.png
+
 # Visual Studio Config
 .vscode/
 
