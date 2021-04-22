@@ -6,11 +6,11 @@ import cma
 
 # num_trials is the number of trials used in Monte Carlo
 # num_iterations is the number of generations the algorithms are executed during a Monte Carlo trial
-# num_trials = 500  # recommended for schaffer2d
-num_trials = 200  # recommended for all other functions
-# num_iterations = 200  # recommended for schaffer2d
-num_iterations = 100  # recommended for all other functions
-function = translated_sphere  # translated_sphere, ackley, schaffer2d, rastrigin
+num_trials = 500  # recommended for schaffer2d
+#num_trials = 200  # recommended for all other functions
+num_iterations = 200  # recommended for schaffer2d
+#num_iterations = 100  # recommended for all other functions
+function = schaffer2d  # translated_sphere, ackley, schaffer2d, rastrigin
 fig_format = 'png'  # 'svg' (Word), 'eps' (Latex), 'png' (best compatibility/worst quality)
 
 
