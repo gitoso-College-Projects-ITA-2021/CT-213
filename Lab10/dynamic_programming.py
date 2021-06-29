@@ -81,7 +81,29 @@ def policy_evaluation(grid_world, initial_value, policy, num_iterations=10000, e
     """
     dimensions = grid_world.dimensions
     value = np.copy(initial_value)
-    # Todo: implement policy evaluation.
+    # [DONE] Todo: implement policy evaluation.
+    (I, J) = grid_world.dimensions
+    for k in range(num_iterations):
+        max_delta = 0
+        for i in range(I):
+            for j in range(J):
+                current_state = (i, j)
+                if not grid_world.is_cell_valid(current_state):
+                    continue
+                v = 0
+                for action in range(NUM_ACTIONS):
+                    r = grid_world.reward(current_state, action)
+                    v += r * policy[current_state[0], current_state[1], action]
+                    for next_state in grid_world.get_valid_sucessors((i, j), action):
+                        transition_prob = grid_world.transition_probability(current_state, action, next_state)
+                        v += grid_world.gamma * policy[current_state[0], current_state[1], action] * transition_prob * value[next_state[0], next_state[1]]
+                
+                delta = fabs(v - value[current_state[0], current_state[1]])
+                if delta > max_delta:
+                    max_delta = delta
+                value[current_state[0], current_state[1]] = v
+        if max_delta < epsilon:
+            break
     return value
 
 
@@ -102,7 +124,33 @@ def value_iteration(grid_world, initial_value, num_iterations=10000, epsilon=1.0
     """
     dimensions = grid_world.dimensions
     value = np.copy(initial_value)
-    # Todo: implement value iteration.
+
+    # [DONE] Todo: implement value iteration.
+    (I, J) = grid_world.dimensions
+    for k in range(num_iterations):
+        max_delta = 0
+        for i in range(I):
+            for j in range(J):
+                current_state = (i, j)
+                if not grid_world.is_cell_valid(current_state):
+                    continue
+                action_value = np.zeros(NUM_ACTIONS)
+                max_value = -inf
+                for action in range(NUM_ACTIONS):
+                    r = grid_world.reward(current_state, action)
+                    action_value[action] = r
+                    for next_state in grid_world.get_valid_sucessors((i, j), action):
+                        transition_prob = grid_world.transition_probability(current_state, action, next_state)
+                        action_value[action] += grid_world.gamma * transition_prob * value[next_state[0], next_state[1]]
+                    if action_value[action] > max_value:
+                        max_value = action_value[action]
+                
+                delta = fabs(max_value - value[current_state[0], current_state[1]])
+                if delta > max_delta:
+                    max_delta = delta
+                value[current_state[0], current_state[1]] = max_value
+        if max_delta < epsilon:
+            break
     return value
 
 
@@ -131,5 +179,13 @@ def policy_iteration(grid_world, initial_value, initial_policy, evaluations_per_
     value = np.copy(initial_value)
     policy = np.copy(initial_policy)
     # Todo: implement policy iteration.
+    for k in range(num_iterations):
+        old_value = value
+        value = policy_evaluation(grid_world, value, policy, num_iterations=evaluations_per_policy)
+        policy = greedy_policy(grid_world, value)
+        delta = np.absolute(value - old_value)
+        if delta.max() < epsilon:
+            break
+
     return value, policy
 
