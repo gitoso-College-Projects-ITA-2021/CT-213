@@ -46,14 +46,25 @@ class DQNAgent:
         :return: action-value neural network.
         :rtype: Keras' model.
         """
-        raise NotImplementedError('You need to implement the neural network model.')  # Remove this line
-        # Todo: Uncomment the lines below
-        # model = models.Sequential()
-        # Todo: implement Keras' model
-        # model.compile(loss=losses.mse,
-        #               optimizer=optimizers.Adam(lr=self.learning_rate))
-        # model.summary()
-        # return model
+        # [DONE] Todo: Uncomment the lines below
+        model = models.Sequential()
+        
+        # [DONE] Todo: implement Keras' model
+
+        # First Layer
+        model.add(layers.Dense(24, input_dim=self.state_size, activation=activations.relu))
+
+        # Second Layer
+        model.add(layers.Dense(24, activation=activations.relu))
+
+        # Third Layer
+        model.add(layers.Dense(self.action_size, activation=activations.linear))
+
+        model.compile(loss=losses.mse,
+                      optimizer=optimizers.Adam(lr=self.learning_rate))
+        
+        model.summary()
+        return model
 
     def act(self, state):
         """
@@ -64,8 +75,26 @@ class DQNAgent:
         :return: chosen action.
         :rtype: int.
         """
-        # Todo: implement epsilon-greey action selection.
-        return 1  # Todo: change this line
+        # [DONE] Todo: implement epsilon-greey action selection.
+
+        # Get actions
+        actions = self.model.predict(state)
+
+        # Find max argument
+        argmax = np.argmax(actions)
+
+        # Number of actions
+        m = actions.shape[1]
+
+        # Build probability vector
+        prob_vect = [self.epsilon/m for k in range(m)]
+        prob_vect[argmax] = self.epsilon/m + 1 - self.epsilon
+
+        # Actions vector
+        actions = [k for k in range(m)]
+        
+        # Choose action using e-greedy
+        return np.random.choice(actions, p=prob_vect)
 
     def append_experience(self, state, action, reward, next_state, done):
         """

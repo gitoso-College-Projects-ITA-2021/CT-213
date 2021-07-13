@@ -75,7 +75,7 @@ for episodes in range(1, NUM_EPISODES + 1):
         plt.ylabel('Return')
         plt.show(block=False)
         plt.pause(0.1)
-        plt.savefig('dqn_training.' + fig_format, fig_format=fig_format)
+        plt.savefig('dqn_training.' + fig_format, format=fig_format)
         # Saving the model to disk
         agent.save("mountain_car.h5")
 plt.pause(1.0)
